@@ -1,0 +1,8 @@
+[
+  "./node_modules/elliptical-utils/compiled/random.js",
+  "./scripts/utils.random.js",
+  "./node_modules/elliptical-mutation-summary/dist/mutation.summary.js",
+  "./node_modules/elliptical-mutation-summary/dist/elliptical.mutation.summary.js",
+  "./node_modules/component-extensions/lib/prototype.template.js",
+  "./lib/binding.js"
+]

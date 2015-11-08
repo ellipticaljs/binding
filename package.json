@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "elliptical-utils": "git+https://github.com/tachyon1337/elliptical-utils.git",
-    "dustjs": "git+https://github.com/tachyon1337/dustjs.git",
+    "component-extensions": "git+https://github.com/tachyon1337/component-extensions.git",
     "elliptical-mutation-summary":"git+https://github.com/tachyon1337/elliptical-mutation-summary.git"
   },
   "devDependencies": {
