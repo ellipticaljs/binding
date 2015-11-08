@@ -7,6 +7,7 @@ var gulp=require('gulp'),
     REPO_NAME='elliptical binding',
     UTILS='./node_modules/elliptical-utils/dist/elliptical.utils.js',
     DUST='./node_modules/dustjs/dist/dust.js',
+    MS='./node_modules/elliptical-mutation-summary/dist/elliptical.mutation.summary.js',
     LIB='./lib/binding.js',
     DIST='./dist';
 
@@ -18,12 +19,14 @@ gulp.task('default',function(){
 gulp.task('build',function(){
     fileStream(UTILS,DIST);
     fileStream(DUST,DIST);
+    fileStream(MS,DIST);
     concatFileStream(LIB,DIST,BUILD_NAME);
 });
 
 gulp.task('minify',function(){
     minFileStream(UTILS,DIST,'elliptical.utils.min.js');
     minFileStream(DUST,DIST,'dust.min.js');
+    minFileStream(MS,DIST,'elliptical.mutation.summary.min.js');
     minFileStream(LIB,DIST,MIN_NAME);
 });
 
