@@ -12,40 +12,23 @@ var gulp=require('gulp'),
     MS='./node_modules/elliptical-mutation-summary/dist/mutation.summary.js',
     EMS='./node_modules/elliptical-mutation-summary/dist/elliptical.mutation.summary.js',
     LIB='./lib/binding.js',
-    DIST='./dist',
-    BUNDLE_JSON=require('./bundle.json'),
-    BUNDLE='./bundle';
+    DIST='./dist';
+
 
 
 gulp.task('default',function(){
-    console.log(REPO_NAME + ' ..."tasks: gulp build|minify|bundle"');
+    console.log(REPO_NAME + ' ..."tasks: gulp build|minify"');
 });
 
 gulp.task('build',function(){
-    fileStream(UTILS,DIST);
-    fileStream(DUST,DIST);
-    fileStream(JQ,DIST);
-    fileStream(MS,DIST);
-    fileStream(EMS,DIST);
-    concatFileStream(TEMPLATE,DIST,'elliptical.extensions.template.js');
     concatFileStream(LIB,DIST,BUILD_NAME);
 });
 
 gulp.task('minify',function(){
-    minFileStream(UTILS,DIST,'elliptical.utils.min.js');
-    minFileStream(DUST,DIST,'dust.min.js');
-    minFileStream(JQ,DIST,'jquery.min.js');
-    minFileStream(MS,DIST,'mutation.summary.min.js');
-    minFileStream(EMS,DIST,'elliptical.mutation.summary.min.js');
-    minFileStream(TEMPLATE,DIST,'elliptical.extensions.template.min.js');
     minFileStream(LIB,DIST,MIN_NAME);
 });
 
-gulp.task('bundle',function(){
-    fileStream(DUST,BUNDLE);
-    fileStream(JQ,BUNDLE);
-    concatFileStream(BUNDLE_JSON,BUNDLE,'elliptical.binding.js');
-});
+
 
 function srcStream(src){
     if(src===undefined) src=BUILD_JSON;

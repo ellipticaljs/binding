@@ -1,0 +1,30 @@
+{
+  "name": "elliptical-binding",
+  "description": "Binds an element mutation to a function",
+  "version":"1.0.1",
+  "main": "dist/elliptical.binding.js",
+  "authors": [
+    "S. Francis"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "mutation",
+    "observer",
+    "function",
+    "binding",
+    "element"
+  ],
+  "homepage": "Y",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "component-extensions": "~1.0.2",
+    "elliptical-mutation-summary": "~1.0.1"
+  }
+}
