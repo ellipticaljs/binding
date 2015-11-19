@@ -1,4 +1,5 @@
 ///binds an element mutation to a function via an attribute setting
+/// i.e, an declarative alternative to imperative jquery plugin approach
 (function (root, factory) {
     if (typeof module !== 'undefined' && module.exports) {
         //commonjs
@@ -20,11 +21,12 @@
     var ATTRIBUTE = 'ea-bind';
     var LISTENER_ON = false;
     var BINDING_DELAY = 500;
+    var LOAD_TIMEOUT=250;
     ///maps
     var BINDING_DECLARATIONS = new Map();
     var ACTIVE_ELEMENT_BINDINGS = new Map();
 
-    // pojo constructs for our map values
+    // POJO constructs for our map values
     var bindingDeclaration = {
         get obj() {
             return {
@@ -46,25 +48,23 @@
     };
 
 
-    ///***listeners***
+    ///***listeners  (listen for mutation events and document ready)***
     function bindingMutationListener() {
         ///mutations
         $(document).on('OnDocumentMutation', function (event, summary) {
-            if (summary.added) {
-                queryBindings(summary.added);
-            }
-            if (summary.removed) {
-                destroyBindings(summary.removed); //important that we clean up to avoid memory leaks
-            }
+            if (summary.added) queryBindings(summary.added);
+            if (summary.removed) destroyBindings(summary.removed); //important that we clean up to avoid memory leaks
         });
 
     }
 
-    //initial onload
+    //document ready, use a setTimeout to ensure bindingDeclarations Map has been set
     $(function () {
         var added = document.querySelectorAll(SELECTOR);
         if (added.length) {
-            queryBindings(added);
+            setTimeout(function(){
+                queryBindings(added);
+            },LOAD_TIMEOUT);
         }
     });
 
@@ -86,11 +86,8 @@
     Binding.prototype.jsonParseMessage = function (obj) {
         try {
             var msgObj = JSON.parse(obj);
-            if (msgObj.message) {
-                return msgObj.message;
-            } else {
-                return obj;
-            }
+            if (msgObj.message) return msgObj.message;
+            else return obj;
         } catch (ex) {
             return obj;
         }
@@ -120,9 +117,7 @@
         var length = images.length;
         var counter = 0;
         if (length === 0) {
-            if (callback) {
-                callback(null);
-            }
+            if (callback) callback(null);
             return false;
         }
         $.each(images, function (i, img) {
@@ -153,9 +148,8 @@
     };
 
     Binding.prototype.component = function (element, component, fn) {
-        if (element[component]) {
-            return fn(element[component].bind(element));
-        } else {
+        if (element[component]) return fn(element[component].bind(element));
+        else {
             var count = 0;
             var MAX_COUNT = 20;
             var intervalId = setInterval(function () {
@@ -163,9 +157,8 @@
                     clearInterval(intervalId);
                     fn(element[component].bind(element));
                 } else {
-                    if (count < MAX_COUNT) {
-                        count++;
-                    } else {
+                    if (count < MAX_COUNT) count++;
+                    else {
                         clearInterval(intervalId);
                         fn(element[component].bind(element));
                     }
@@ -190,22 +183,16 @@
         obj.selector = selector;
         obj.callback = callback;
         var arr = this._events;
-        if ($.inArray(obj, arr) === -1) {
-            this._events.push(obj);
-        }
+        if ($.inArray(obj, arr) === -1) this._events.push(obj);
         if (selector) {
             element.on(event, selector, function () {
                 var args = [].slice.call(arguments);
-                if (callback) {
-                    callback.apply(this, args);
-                }
+                if (callback) callback.apply(this, args);
             });
         } else {
             element.on(event, function () {
                 var args = [].slice.call(arguments);
-                if (callback) {
-                    callback.apply(this, args);
-                }
+                if (callback) callback.apply(this, args);
             });
         }
 
@@ -257,9 +244,7 @@
         var $nodes = $(removed).selfFind(SELECTOR);
         if ($nodes.length && $nodes.length > 0) {
             $.each($nodes, function (index, node) {
-                if (node._EA_BINDING_ID) {
-                    disposeElementBinding(node);
-                }
+                if (node._EA_BINDING_ID) disposeElementBinding(node);
             });
         }
     }
@@ -268,9 +253,8 @@
         var key = node._EA_BINDING_ID;
         var obj = ACTIVE_ELEMENT_BINDINGS.get(key);
         if (obj === undefined) iterateBindingsForNode(node);
-        else {
-            dispose(obj, node);
-        }
+        else dispose(obj, node);
+
     }
 
     ///run unbind events on the function context,kill the closure, delete from the Active Map
@@ -278,9 +262,7 @@
         obj.context.unbindEvents();
         obj.context.onDestroy();
         obj.context = null;
-        if (node && node.parentNode) {
-            node.parentNode.removeChild(node);
-        }
+        if (node && node.parentNode) node.parentNode.removeChild(node);
         obj.fn = null;//null the closure, otherwise any event handlers set on the element==memory leak
         obj.node = null;
         ACTIVE_ELEMENT_BINDINGS.delete(key);
@@ -289,9 +271,7 @@
     //backup disposal method
     function iterateBindingsForNode(node) {
         ACTIVE_ELEMENT_BINDINGS.forEach(function (key, obj) {
-            if (node === obj.node) {
-                dispose(obj, node);
-            }
+            if (node === obj.node) dispose(obj, node);
         });
     }
 

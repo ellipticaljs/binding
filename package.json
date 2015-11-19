@@ -1,7 +1,7 @@
 {
   "name": "elliptical-binding",
   "description": "Binds an element mutation to a function",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": "S. Francis",
   "license": "MIT",
   "repository": {
