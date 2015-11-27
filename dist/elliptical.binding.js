@@ -3,17 +3,17 @@
 (function (root, factory) {
     if (typeof module !== 'undefined' && module.exports) {
         //commonjs
-        module.exports = factory(require('elliptical-utils'), require('component-extensions').template);
+        module.exports = factory(require('elliptical-utils'), require('component-extensions').template,require('elliptical-mutation-summary'));
     } else if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
-        define(['elliptical-utils', 'component-extensions'], factory);
+        define(['elliptical-utils', 'component-extensions','elliptical-mutation-summary'], factory);
     } else {
         // Browser globals (root is window)
         root.elliptical = root.elliptical || {};
-        root.elliptical.binding = factory(root.elliptical.utils, elliptical.extensions.template);
+        root.elliptical.binding = factory(root.elliptical.utils, elliptical.extensions.template,elliptical.mutation.summary);
         root.returnExports = root.elliptical.binding;
     }
-}(this, function (utils, template) {
+}(this, function (utils, template,Observer) {
     if(template.template) template=template.template;
     ///***variables,constants***
     var random = utils.random;
@@ -25,6 +25,8 @@
     ///maps
     var BINDING_DECLARATIONS = new Map();
     var ACTIVE_ELEMENT_BINDINGS = new Map();
+    ///mutation observer
+    Observer.connect();
 
     // POJO constructs for our map values
     var bindingDeclaration = {
@@ -253,12 +255,12 @@
         var key = node._EA_BINDING_ID;
         var obj = ACTIVE_ELEMENT_BINDINGS.get(key);
         if (obj === undefined) iterateBindingsForNode(node);
-        else dispose(obj, node);
+        else dispose(obj, node,key);
 
     }
 
     ///run unbind events on the function context,kill the closure, delete from the Active Map
-    function dispose(obj, node) {
+    function dispose(obj, node,key) {
         obj.context.unbindEvents();
         obj.context.onDestroy();
         obj.context = null;
@@ -271,7 +273,7 @@
     //backup disposal method
     function iterateBindingsForNode(node) {
         ACTIVE_ELEMENT_BINDINGS.forEach(function (key, obj) {
-            if (node === obj.node) dispose(obj, node);
+            if (node === obj.node) dispose(obj, node,key);
         });
     }
 
