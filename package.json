@@ -1,17 +1,17 @@
 {
   "name": "elliptical-binding",
   "description": "Binds an element mutation to a function",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "author": "S. Francis",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tachyon1337/elliptical-binding.git"
+    "url": "https://github.com/ellipticaljs/elliptical-binding.git"
   },
   "dependencies": {
-    "elliptical-utils": "git+https://github.com/tachyon1337/elliptical-utils.git",
-    "component-extensions": "git+https://github.com/tachyon1337/component-extensions.git",
-    "elliptical-mutation-summary":"git+https://github.com/tachyon1337/elliptical-mutation-summary.git"
+    "elliptical-utils": "git+https://github.com/ellipticaljs/utils.git",
+    "component-extensions": "git+https://github.com/ellipticaljs/component-extensions.git",
+    "elliptical-mutation-summary":"git+https://github.com/ellipticaljs/mutation-summary.git"
   },
   "devDependencies": {
     "gulp": "^3.8.7",

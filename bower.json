@@ -1,7 +1,7 @@
 {
   "name": "elliptical-binding",
   "description": "Binds an element mutation to a function",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "main": "dist/elliptical.binding.js",
   "authors": [
     "S. Francis"
@@ -14,7 +14,7 @@
     "binding",
     "element"
   ],
-  "homepage": "Y",
+  "homepage": "https://github.com/ellipticaljs/binding",
   "moduleType": [],
   "ignore": [
     "**/.*",
@@ -33,7 +33,27 @@
     "demo",
     "index.html",
     "build.json",
-    "bundle.json"
+    "bundle.json",
+    ".gitignore",
+    ".npmignore",
+    "gulpfile.js",
+    "lib",
+    "docs",
+    "index.js",
+    "umd.js",
+    "package.json",
+    "demo",
+    "index.html",
+    "build.json",
+    "bundle.json",
+    ".nvmrc",
+    ".eslintrc",
+    "bin",
+    "CHANGELOG.md",
+    "demos",
+    "stylesheets",
+    "_index.scss",
+    "bk"
   ],
   "dependencies": {
     "component-extensions": "~1.0.2",
