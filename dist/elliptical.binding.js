@@ -3,18 +3,18 @@
 (function (root, factory) {
     if (typeof module !== 'undefined' && module.exports) {
         //commonjs
-        module.exports = factory(require('elliptical-utils'), require('component-extensions').template,require('elliptical-mutation-summary'));
+        module.exports = factory(require('elliptical-utils'), require('dustjs'),require('elliptical-mutation-summary'));
     } else if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
-        define(['elliptical-utils', 'component-extensions','elliptical-mutation-summary'], factory);
+        define(['elliptical-utils', 'dustjs','elliptical-mutation-summary'], factory);
     } else {
         // Browser globals (root is window)
         root.elliptical = root.elliptical || {};
-        root.elliptical.binding = factory(root.elliptical.utils, elliptical.extensions.template,elliptical.mutation.summary);
+        root.elliptical.binding = factory(root.elliptical.utils,root.dust,root.elliptical.mutation.summary);
         root.returnExports = root.elliptical.binding;
     }
-}(this, function (utils, template,Observer) {
-    if(template.template) template=template.template;
+}(this, function (utils, dust,Observer) {
+
     ///***variables,constants***
     var random = utils.random;
     var SELECTOR = '[ea-bind]';
@@ -95,19 +95,27 @@
         }
     };
 
-    Binding.prototype.render = function (node, templateId, context, callback) {
-        template._render(node,templateId,context,callback);
-    };
+    function precompile(template,id){
+        template = template.replace(/&quot;/g,'"');
+        var compiled=dust.compile(template,id);
+        dust.loadSource(compiled);
+    }
 
-    Binding.prototype.renderTemplate = function (templateId, context, callback) {
-        template._renderTemplate(templateId,context,function(err,out){
-            if (!err) out = $.parseHTML(out, document, true);
+    function renderTemplate(node,templateId,context,callback){
+        dust.render(templateId, context, function(err,out){
+            if(out || out==="") node.innerHTML=out;
             if (callback) callback(err, out);
         });
-    };
+    }
 
-    Binding.prototype.renderTemplateString=function(str,context,callback){
-        template._renderTemplateString(str,context,callback);
+    function renderTemplateString(node,str,context,callback){
+        var id='template-' + random.str(6);
+        precompile(str,id);
+        renderTemplate(node,id,context,callback);
+    }
+
+    Binding.prototype.render = function (node, templateStr, context, callback) {
+        renderTemplateString(node,templateStr,context,callback);
     };
 
 
