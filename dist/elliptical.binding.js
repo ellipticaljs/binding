@@ -177,7 +177,7 @@
         }
     };
 
-    Binding.prototype.onDestroy = function () {};
+    Binding.prototype.dispose = function () {};
 
     Binding.prototype.event = function (element, event, selector, callback) {
         var obj = {};
@@ -270,7 +270,7 @@
     ///run unbind events on the function context,kill the closure, delete from the Active Map
     function dispose(obj, node,key) {
         obj.context.unbindEvents();
-        obj.context.onDestroy();
+        obj.context.dispose();
         obj.context = null;
         if (node && node.parentNode) node.parentNode.removeChild(node);
         obj.fn = null;//null the closure, otherwise any event handlers set on the element==memory leak
