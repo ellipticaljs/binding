@@ -71,7 +71,17 @@
         }
     });
 
+    function touchClick(){
+        return ('ontouchend' in document) ? 'touchstart' : 'click';
+    }
 
+    function touchPress(){
+        return ('ontouchend' in document) ? 'touchend' : 'click';
+    }
+
+    function tap(){
+        return ('ontouchend' in document) ? 'tap' : 'click';
+    }
 
     ///***Binding Constructor***
     function Binding(key, fn) {
@@ -81,9 +91,9 @@
         obj.fn = fn;
         obj.context = this;
         BINDING_DECLARATIONS.set(key, obj);
-        this.click = 'touchclick';
-
-
+        this.click = touchClick();
+        this.press=touchPress();
+        this.tap=tap();
     }
 
     //Binding prototype methods
@@ -150,7 +160,6 @@
 
     ///run unbind events on the function context,kill the closure, delete from the Active Map
     function dispose(obj, node,key) {
-        obj.context.unbindEvents();
         obj.context.dispose();
         obj.context = null;
         if (node && node.parentNode) node.parentNode.removeChild(node);
