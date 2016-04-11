@@ -65,12 +65,12 @@
     document.addEventListener('WebComponentsReady',function(event){
         queryOnDocumentReady();
     });
-    
+
     $(function () {
         //if web components polyfill exists, we use the WebComponentsReady. Else use Document Ready
         if(window.WebComponents===undefined) queryOnDocumentReady();
     });
-    
+
     function queryOnDocumentReady(){
         var added = document.querySelectorAll(SELECTOR);
         if (added.length) {
@@ -127,27 +127,40 @@
             var $nodes = $(added).selfFind('[' + ATTRIBUTE + '="' + key + '"]');
             if ($nodes[0]) {
                 $.each($nodes, function (index, node) {
-                    var id = random.id(8);
-                    node._EA_BINDING_ID = id;
-                    var binding = activeElementBinding.obj;
-                    binding.node = node;
-                    binding.context = obj.context;
-                    binding.attrValue = key;
-                    binding.fn = obj.fn;
-                    ACTIVE_ELEMENT_BINDINGS.set(id, binding);
-                    initBinding(obj.context, node, obj.fn);
+                    if(validateNewBinding(node)) parseBinding(obj,key,node);
                 });
             }
         });
     }
 
+    //build the binding object
+    function parseBinding(obj,key,node){
+        var id = random.id(8);
+        node._EA_BINDING_ID = id;
+        var binding = activeElementBinding.obj;
+        binding.node = node;
+        binding.context = obj.context;
+        binding.attrValue = key;
+        binding.fn = obj.fn;
+        ACTIVE_ELEMENT_BINDINGS.set(id, binding);
+        initBinding(obj.context, node, obj.fn);
+    }
 
+    //create the binding
     function initBinding(context, node, fn) {
         setTimeout(function () {
             fn.call(context, node);
         }, BINDING_DELAY);
     }
 
+    // ** validate new binding -- no duplicate nodes **
+    function validateNewBinding(node){
+        var doesNotExist=true;
+        ACTIVE_ELEMENT_BINDINGS.forEach(function (obj,key) {
+            if (node === obj.node) doesNotExist=false;
+        });
+        return doesNotExist;
+    }
 
     ///*** dispose ****
     function destroyBindings(removed) {
@@ -179,7 +192,7 @@
 
     //backup disposal method
     function iterateBindingsForNode(node) {
-        ACTIVE_ELEMENT_BINDINGS.forEach(function (key, obj) {
+        ACTIVE_ELEMENT_BINDINGS.forEach(function (obj,key) {
             if (node === obj.node) dispose(obj, node,key);
         });
     }
