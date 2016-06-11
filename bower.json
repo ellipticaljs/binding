@@ -1,7 +1,7 @@
 {
   "name": "elliptical-binding",
   "description": "Binds an element mutation to a function",
-  "version": "1.0.17",
+  "version": "1.1.0",
   "main": "dist/elliptical.binding.js",
   "authors": [
     "S. Francis"
@@ -57,6 +57,6 @@
   ],
   "dependencies": {
     "elliptical-mutation-summary": "~1.0.1",
-    "elliptical-utils": "~2.0.4"
+    "elliptical-utils": "~2.1.0"
   }
 }
